@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: ssh-exporter
+  name: ssh-exporter
+  namespace: {{ .Values.namespace | default "monitoring" }}
+spec:
+  replicas: {{ .Values.sshExporter.replicasCount | default "1" }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: exporter
+      app.kubernetes.io/name: ssh-exporter
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: ssh-exporter
+      labels:
+        app.kubernetes.io/component: exporter
+        app.kubernetes.io/name: ssh-exporter
+    spec:
+      automountServiceAccountToken: true
+      containers:
+      - args:
+        - --config.file=/etc/ssh_exporter/config.yaml
+        - --web.listen-address=:{{ .Values.port | default "9312" }}
+        image: {{ .Values.sshExporter.image | default "treydock/ssh_exporter" }}
+        name: ssh-exporter
+        ports:
+        - containerPort: {{ .Values.port | default "9312" }}
+          name: http
+        resources:
+          limits:
+            cpu: 20m
+            memory: 40Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+        volumeMounts:
+        - mountPath: /etc/ssh_exporter/config.yaml
+          subPath: config.yaml
+          name: ssh-config
+          readOnly: true
+        - mountPath: /.ssh/id_rsa
+          subPath: id_rsa
+          name: sshprivatekey
+          readOnly: true         
+       nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: ssh-exporter
+      volumes:
+      - configMap:
+          name: ssh-exporter-config
+        name: ssh-config
+       - configMap:
+          name: sshprivatekey-config
+        name: sshprivatekey                      

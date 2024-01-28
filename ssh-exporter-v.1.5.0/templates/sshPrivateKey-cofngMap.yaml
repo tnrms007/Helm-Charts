@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: exporter
+    app.kubernetes.io/name: ssh-exporter
+  name: sshprivatekey
+  namespace: {{ .Values.namespace | default "monitoring" }}
+data:
+  id-rsa: |
+{{ .Values.ConfigMap.privatekey | indent 4 }}

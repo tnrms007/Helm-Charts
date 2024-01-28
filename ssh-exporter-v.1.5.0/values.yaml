@@ -1,0 +1,27 @@
+# kubernetes resource namespace
+namespace: monitoring
+
+# ssh-exporter serivce & container port
+port: 9512
+
+#
+sshExporter:
+  image: "treydock/ssh_exporter"
+  replicasCount: "1"
+
+# First, create a private key that can access each server with the ssh-keygen command.
+# Then deploy the public key to the server you want to access. Then, enter your private key here. (/home/[user]/.ssh/id_rsa) 
+# and ssh_exporter config
+ConfigMap:
+  FunctionKey: default
+  FunctionContent: |
+    user: prometheus
+    private_key: /home/prometheus/.ssh/id_rsa
+    command: uptime
+    command_expect: "load average"
+    timeout: 5    
+  privatekey: |
+    === start private ====
+    asdasdasdsadzsdasdq
+    sadqwasdsdazxcaddas
+    === end ====
