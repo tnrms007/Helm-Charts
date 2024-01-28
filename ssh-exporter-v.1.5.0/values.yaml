@@ -8,6 +8,16 @@ port: 9512
 sshExporter:
   image: "treydock/ssh_exporter"
   replicasCount: "1"
+  hostNetwork: "true"
+  hostPID: "true"
+  nodeSelector:
+    kubernetes.io/os: linux
+  
+  tolerations: 
+  #  - key: "key"
+  #    operator: "Equal|Exists"
+  #    value: "value"
+  #    effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
 # First, create a private key that can access each server with the ssh-keygen command.
 # Then deploy the public key to the server you want to access. Then, enter your private key here. (/home/[user]/.ssh/id_rsa) 

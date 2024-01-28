@@ -54,8 +54,14 @@ spec:
           subPath: id_rsa
           name: sshprivatekey
           readOnly: true         
-       nodeSelector:
-        kubernetes.io/os: linux
+      hostNetwork: {{ .Values.sshExporter.hostNetwork | default "ture"}}
+      hostPID: {{ .Values.sshExporter.hostPID | default "ture" }}
+    {{- if .Values.sshExporter.nodeSelector }}
+      nodeSelector: {{ toYaml .Values.sshExporter.nodeSelector | nindent 8 }}
+    {{- end }}
+    {{- if .Values.sshExporter.tolerations }}
+      tolerations: {{ toYaml .Values.sshExporter.tolerations | nindent 8 }}
+    {{- end }}
       serviceAccountName: ssh-exporter
       volumes:
       - configMap:
