@@ -1,0 +1,187 @@
+common:
+  namespace: "monitoring"
+  interval: "30s"
+  replicasCount: "3"
+  
+  image:
+    proxy: "quay.io/brancz/kube-rbac-proxy:v0.15.0"
+  nodeSelector:
+    kubernetes.io/os: "linux"
+  tolerations: 
+  #  - key: "key"
+  #    operator: "Equal|Exists"
+  #    value: "value"
+  #    effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"  
+
+# alertamanger values
+alertmanager:
+  image: "quay.io/prometheus/alertmanager:v0.26.0"
+  limits:
+    cpu: "100m"
+    memory: "100Mi"
+  port: "9093"
+  secrets: |
+    "global":
+      "resolve_timeout": "5m"
+    "inhibit_rules":
+    - "equal":
+      - "namespace"
+      - "alertname"
+      "source_matchers":
+      - "severity = critical"
+      "target_matchers":
+      - "severity =~ warning|info"
+    - "equal":
+      - "namespace"
+      - "alertname"
+      "source_matchers":
+      - "severity = warning"
+      "target_matchers":
+      - "severity = info"
+    - "equal":
+      - "namespace"
+      "source_matchers":
+      - "alertname = InfoInhibitor"
+      "target_matchers":
+      - "severity = info"
+    "receivers":
+    - "name": "Default"
+    - "name": "Watchdog"
+    - "name": "Critical"
+    - "name": "null"
+    "route":
+      "group_by":
+      - "namespace"
+      "group_interval": "5m"
+      "group_wait": "30s"
+      "receiver": "Default"
+      "repeat_interval": "12h"
+      "routes":
+      - "matchers":
+        - "alertname = Watchdog"
+        "receiver": "Watchdog"
+      - "matchers":
+        - "alertname = InfoInhibitor"
+        "receiver": "null"
+      - "matchers":
+        - "severity = critical"
+        "receiver": "Critical"
+
+blackboxExporter:
+  image: 
+    blackbox: "quay.io/prometheus/blackbox-exporter:v0.24.0"
+    configmap: "jimmidyson/configmap-reload:v0.5.0"
+  limits:
+    cpu: "20m"
+    memory: "40Mi"
+  port: "19115"
+  config: |
+    "modules":
+      "http_2xx":
+        "http":
+          "preferred_ip_protocol": "ip4"
+          "no_follow_redirects": "false"
+          "tls_config":
+             "insecure_skip_verify": "ture"
+        "prober": "http"
+      "http_post_2xx":
+        "http":
+          "method": "POST"
+          "preferred_ip_protocol": "ip4"
+        "prober": "http"
+      "irc_banner":
+        "prober": "tcp"
+        "tcp":
+          "preferred_ip_protocol": "ip4"
+          "query_response":
+          - "send": "NICK prober"
+          - "send": "USER prober prober prober :prober"
+          - "expect": "PING :([^ ]+)"
+            "send": "PONG ${1}"
+          - "expect": "^:[^ ]+ 001"
+      "pop3s_banner":
+        "prober": "tcp"
+        "tcp":
+          "preferred_ip_protocol": "ip4"
+          "query_response":
+          - "expect": "^+OK"
+          "tls": true
+          "tls_config":
+            "insecure_skip_verify": false
+      "ssh_banner":
+        "prober": "tcp"
+        "tcp":
+          "preferred_ip_protocol": "ip4"
+          "query_response":
+          - "expect": "^SSH-2.0-"
+      "tcp_connect":
+        "prober": "tcp"
+        "tcp":
+          "preferred_ip_protocol": "ip4"  
+
+grafana:
+  image: "grafana/grafana:10.2.3"
+  limits:
+    cpu: "200m"
+    memory: "200Mi"
+  port: "3000"
+
+kubeStateMetrics:
+  image: "registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.10.1"
+  limits:
+    cpu: "100m"
+    memory: "250Mi"
+# Comma-separated list of metrics to be exposed.
+# This list comprises of exact metric names and/or regex patterns.
+# The allowlist and denylist are mutually exclusive.
+  metricAllowlist: []
+
+# Comma-separated list of metrics not to be enabled.
+# This list comprises of exact metric names and/or regex patterns.
+# The allowlist and denylist are mutually exclusive.
+  metricDenylist: []
+
+# Comma-separated list of additional Kubernetes label keys that will be used in the resource's
+# labels metric. By default the metric contains only name and namespace labels.
+# To include additional labels, provide a list of resource names in their plural form and Kubernetes
+# label keys you would like to allow for them (Example: '=namespaces=[k8s-label-1,k8s-label-n,...],pods=[app],...)'.
+# A single '*' can be provided per resource instead to allow any labels, but that has
+# severe performance implications (Example: '=pods=[*]').
+  metricLabelsAllowlist: []
+    # - namespaces=[k8s-label-1,k8s-label-n]
+
+# Comma-separated list of Kubernetes annotations keys that will be used in the resource'
+# labels metric. By default the metric contains only name and namespace labels.
+# To include additional annotations provide a list of resource names in their plural form and Kubernetes
+# annotation keys you would like to allow for them (Example: '=namespaces=[kubernetes.io/team,...],pods=[kubernetes.io/team],...)'.
+# A single '*' can be provided per resource instead to allow any annotations, but that has
+# severe performance implications (Example: '=pods=[*]').
+  metricAnnotationsAllowList: []
+    # - pods=[k8s-annotation-1,k8s-annotation-n]
+
+nodeExporter:
+  image: "quay.io/prometheus/node-exporter:v1.7.0"
+  limits:
+    cpu: "250m"
+    memory: "180Mi"
+  port: "9100"
+  tolerations: 
+  #  - key: "key"
+  #    operator: "Equal|Exists"
+  #    value: "value"
+  #    effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"  
+
+prometheus:
+  image: "quay.io/prometheus/prometheus:v2.49.1"
+  externalLabel: "test"
+
+prometheusAdapter:
+  image: registry.k8s.io/prometheus-adapter/prometheus-adapter:v0.11.2  
+
+prometheusOperator:
+  image: 
+    operator: "quay.io/prometheus/blackbox-exporter:v0.24.0"
+    configmap: "quay.io/prometheus-operator/prometheus-operator:v0.71.0"
+  limits:
+    cpu: "200m"
+    memory: "200Mi"

@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  labels:
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+  name: main
+  namespace: {{ .Values.common.namespace | default "monitoring" }}
+spec:
+  image: {{ .Values.alertmanager.image | default "quay.io/prometheus/alertmanager:v0.26.0" }} 
+{{- if .Values.common.nodeSelector }}
+  nodeSelector: {{ toYaml .Values.common.nodeSelector | nindent 4 }}
+{{- end }}
+{{- if .Values.common.tolerations }}
+  tolerations: {{ toYaml .Values.common.tolerations | nindent 4 }}
+{{- end }}
+  podMetadata:
+    labels:
+      app.kubernetes.io/component: alert-router
+      app.kubernetes.io/instance: main
+      app.kubernetes.io/name: alertmanager
+      app.kubernetes.io/part-of: kube-prometheus
+  replicas: {{ .Values.common.replicasCount | default "3" }} 
+  resources:
+    limits:
+      cpu: {{ .Values.alertmanager.limits.cpu | default "100m" }} 
+      memory: {{ .Values.alertmanager.limits.memory | default "100Mi" }}
+    requests:
+      cpu: 4m
+      memory: 100Mi
+  secrets: []
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: alertmanager-main

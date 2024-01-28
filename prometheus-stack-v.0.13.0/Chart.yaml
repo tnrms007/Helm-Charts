@@ -1,0 +1,7 @@
+apiVersion: v2
+appVersion: v0.13.0
+description: kube-prometheus stack in kubernetes
+version: 1.0.0
+maintainers:
+- name: KSG
+- name: Waji
