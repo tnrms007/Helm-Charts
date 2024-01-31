@@ -52,7 +52,7 @@ spec:
           readOnly: true
         - mountPath: /.ssh/id_rsa
           subPath: id_rsa
-          name: sshprivatekey
+          name: sshprivatekey-config
           readOnly: true         
       hostNetwork: {{ .Values.sshExporter.hostNetwork | default "ture"}}
       hostPID: {{ .Values.sshExporter.hostPID | default "ture" }}
@@ -64,9 +64,10 @@ spec:
     {{- end }}
       serviceAccountName: ssh-exporter
       volumes:
-      - configMap:
-          name: ssh-exporter-config
-        name: ssh-config
-       - configMap:
-          name: sshprivatekey-config
-        name: sshprivatekey                      
+        - name: ssh-config
+          configMap:
+            name: ssh-config
+        - name: sshprivatekey-config
+          configMap:
+            name: sshprivatekey       
+                  
