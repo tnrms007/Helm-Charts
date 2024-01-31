@@ -23,13 +23,13 @@ sshExporter:
 # Then deploy the public key to the server you want to access. Then, enter your private key here. (/home/[user]/.ssh/id_rsa) 
 # and ssh_exporter config
 ConfigMap:
-  FunctionKey: default
   FunctionContent: |
-    user: prometheus
-    private_key: /home/prometheus/.ssh/id_rsa
-    command: uptime
-    command_expect: "load average"
-    timeout: 5    
+    modules: 
+      user: prometheus
+      private_key: /home/prometheus/.ssh/id_rsa
+      command: uptime
+      command_expect: "load average"
+      timeout: 5    
   privatekey: |
     === start private ====
     asdasdasdsadzsdasdq
