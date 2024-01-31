@@ -4,7 +4,7 @@ This Helm chart provides a custom implementation of the ssh_exporter for Kuberne
 
 ## Overview
 
-The custom SSH exporter allows you to verify SSH connectivity and execute specific commands on remote servers.
+Using a custom SSH export, you can check the SSH connection, run a specific command on the remote server, and check the connection with the obtained values.
 
 | Kubernetes Resource   | Quantity |
 |------------------------|----------|
