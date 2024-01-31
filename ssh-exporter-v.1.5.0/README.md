@@ -1,6 +1,35 @@
-1. GitHub - treydock/ssh_exporter 를 그대로 사용하기에는 kubernetes에서 사용 할 수 없어서 custom manifest 만들고 helm chart 로 만듦
-2. Kuberentes Resources: Configmap 2개, serviceAccount 1개,service 1개, depolyment 1개
-3. _helpers 등은 구조가 간단하기때문에 만들지 않음.
-4. ssh_exporter는 말그대로 ssh 원격연결후 특정명령어로 실제 서버에 접근이 되는가를 검증하는 exporter로 다양한 로직을 원하면 custom exporter 만들면 된다. 
-5. helm install ssh-exporter ./helm-chart-dir -n [namespace]
-6. 해당 Chart는 helm hook, argocd syncwave가 적용되어있음.
+<div lang="en">
+
+# Custom SSH Exporter Helm Chart
+
+This Helm chart provides a custom implementation of the ssh_exporter for Kubernetes environments. The original GitHub repository [treydock/ssh_exporter](https://github.com/treydock/ssh_exporter) couldn't be directly utilized in Kubernetes, so custom manifests and a Helm chart were created.
+
+## Overview
+
+The custom SSH exporter allows you to verify SSH connectivity and execute specific commands on remote servers. It's designed to be flexible, allowing you to define custom exporters if you require additional functionality beyond the standard SSH connectivity check.
+
+| Kubernetes Resource   | Quantity |
+|------------------------|----------|
+| ConfigMap              | 2        |
+| ServiceAccount         | 1        |
+| Service                | 1        |
+| Deployment             | 1        |
+
+
+## Install
+helm install ssh-exporter ./helm-chart-dir -n [namespace]
+
+## ⚠️ Notice
+
+-This custom SSH Exporter Helm Chart does not include an `_helpers` file as the structure is straightforward and doesn't require additional helper functions.
+-SSH Exporter is a tool designed to verify SSH connectivity and execute specific commands on remote servers. It functions as an exporter, allowing you to monitor and validate access to servers via SSH. If you require additional functionality or custom logic beyond the standard SSH connectivity check, SSH Exporter provides the flexibility to create custom exporters tailored to your specific needs.
+
+</div>
+
+<div lang="ko">
+
+### 한글 텍스트
+
+이것은 한글 텍스트입니다.
+
+</div>
