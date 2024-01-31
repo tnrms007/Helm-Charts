@@ -1,5 +1,3 @@
-<div lang="en">
-
 # Custom SSH Exporter Helm Chart
 
 This Helm chart provides a custom implementation of the ssh_exporter for Kubernetes environments. The original GitHub repository [treydock/ssh_exporter](https://github.com/treydock/ssh_exporter) couldn't be directly utilized in Kubernetes, so custom manifests and a Helm chart were created.
@@ -21,15 +19,5 @@ helm install ssh-exporter ./helm-chart-dir -n [namespace]
 
 ## ⚠️ Notice
 
--This custom SSH Exporter Helm Chart does not include an `_helpers` file as the structure is straightforward and doesn't require additional helper functions.
--SSH Exporter is a tool designed to verify SSH connectivity and execute specific commands on remote servers. It functions as an exporter, allowing you to monitor and validate access to servers via SSH. If you require additional functionality or custom logic beyond the standard SSH connectivity check, SSH Exporter provides the flexibility to create custom exporters tailored to your specific needs.
-
-</div>
-
-<div lang="ko">
-
-### 한글 텍스트
-
-이것은 한글 텍스트입니다.
-
-</div>
+* This custom SSH Exporter Helm Chart does not include an `_helpers` file as the structure is straightforward and doesn't require additional helper functions.
+* SSH Exporter is a tool designed to verify SSH connectivity and execute specific commands on remote servers. It functions as an exporter, allowing you to monitor and validate access to servers via SSH. If you require additional functionality or custom logic beyond the standard SSH connectivity check, SSH Exporter provides the flexibility to create custom exporters tailored to your specific needs.
