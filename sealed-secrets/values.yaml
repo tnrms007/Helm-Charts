@@ -76,7 +76,7 @@ skipRecreate: false
 ## keyrenewperiod: "720h30m"
 ## To disable use "0", with quotes!
 ##
-keyrenewperiod: "3650d"
+keyrenewperiod: "87660h0m" # day 옵션 안먹힘.
 ## @param rateLimit Number of allowed sustained request per second for verify endpoint
 ##
 rateLimit: ""
@@ -85,7 +85,7 @@ rateLimit: ""
 rateLimitBurst: ""
 ## @param additionalNamespaces List of namespaces used to manage the Sealed Secrets
 ##
-additionalNamespaces: 
+additionalNamespaces: ## sealed kind 지정하는 옵션
   - default
   - sealed-secrets
   - kube-system
@@ -214,7 +214,7 @@ runtimeClassName: ""
 ## @param affinity [object] Affinity for Sealed Secret pods assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
-affinity:
+affinity: {} # 어처피 ha 구조가 이중화 구성시에는 필요 없음. nodeselector냐 이거냐임.
  # podAntiAffinity:
   #   preferredDuringSchedulingIgnoredDuringExecution:
   #   - weight: 100
@@ -446,7 +446,7 @@ rbac:
 
 ## @section Metrics parameters
 
-metrics:
+metrics: # 활성화 시 enabled, namespace, interval, scrapetimeout 설정하면 됨.
   ## Prometheus Operator ServiceMonitor configuration
   ##
   serviceMonitor:

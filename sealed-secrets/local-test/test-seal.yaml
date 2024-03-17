@@ -1,0 +1,19 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true" # if you want change seal
+  name: test1
+  namespace: default
+spec:
+  encryptedData:
+    # file name: file description
+    vminfo: AgBr0Eiq6EGTzYW1XgwL2BwTAv2mapB62p5yz+7AfVJLvG3xZN9eQjYJ7gh2MbdmKPzvzHNx4JNw5Hag2+b22jK/+NZX7yEJQoWysUjo2B0p45QhNG4lkjZAcoTc+MdAd7XSGOH0cfEq+szAPEP8wbvkLlubqNmzRKppBaogAGEprBK6XlqhhCeuEtpSAkSFT/jxpKsOWsQnHtqA7UM/yaJAwlq3rbp2nQ4NGAvznuypZ3SiuL94ED00cia0hAQrPjG+ZUTGW20dmyH4VnxqyoK0+Dss8xLef9cCzlsug4PqyK+5/HH09mOnyThWSLYnEyemrJzHj6ywP2DHGtg0nmKT2wj/pPvOz607draGUvhRtstYYttA0l33tAvXUUJfnH0R7FM/ZYrKMM9EQLpQc4xqT1HwPq0QduG7FDuPymtwqcCJoZZK/dH7J2bhGCmPyNvcZ1bYKqV7escC52N7kopqci2IKSYtL9lsDM6f7AJE6VgommrQDYbahOevGClmqZVviKi8zru2dBSY4O54yIy0AUwiGIhW8ArydHRJmGDIn3eyQ/i0jyNdcRI0Y86mP9JRxBRZMLyZPnfGrnUqIV6tzXK/vOmXlJ2Usp7PhsQUyamyG9gmiWmBOg6v1pQHm4o6osWvsWsPuLNBWv+RSt6VJtyZiNdXS3TSI77tzjEqvFck1SFryjUokvHasnYLo2ErRqfOEd+1581N2wMHhZGVBL5TjbVbF8rqgt285x6+tABq6RuilIaGjUaQAq4844uN0Pue1m1woFx2kxVg20ZayuGPbVuLusmCpqn7mZkQkbr/Qptt70gPpfFntYdIu0oZzaVBHKsWTsh6m9eRitE1VmwB0wxlTPIFBjk=
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true" 
+      labels:
+        app.kubernetes.io/name: test1
+      name: test1
+      namespace: default

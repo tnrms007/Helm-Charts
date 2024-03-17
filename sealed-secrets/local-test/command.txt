@@ -1,0 +1,31 @@
+# kubeseal 다운로드
+wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.26.1/kubeseal-0.26.1-linux-amd64.tar.gz
+
+# kubeseal 설치
+sudo install -m 755 kubeseal /usr/local/bin/kubeseal
+
+# local 에서 사용 할 수 있게 pem key 추출
+kubeseal --controller-namespace sealed-secrets --controller-name sealed-secrets --fetch-cert >> cert.pem
+
+# windows 에서 kubeseal 사용하여 secrets 만들기
+vscode kubeseal extention 사용.
+extention 쓸때는 > seal 해야 함.
+
+# sealed secrets kind
+annotations 에서 sealedsecrets.bitnami.com/cluster-wide: "true" 하지 않으면 변경할 수 없음. 기본 stric임.
+wide 안하고 변경시 아래 에러 발생
+time=2024-03-17T13:17:32.560Z level=INFO msg="Event(v1.ObjectReference{Kind:\"SealedSecret\", Namespace:\"default\", Name:\"test1\", UID:\"8353d80d-3136-4169-afa3-ba389fceb857\", APIVersion:\"bitnami.com/v1alpha1\", ResourceVersion:\"687625\", FieldPath:\"\"}): type: 'Warning' reason: 'ErrUnsealFailed' Failed to unseal: no key could decrypt secret (vminfo)"
+
+# ha
+replicas를 늘릴 수는 있으나 ha 구조가 아님,
+만약 2개를 늘릴 시 sealed resource 생성 시 아래와 같은 에러 발생.
+om/v1alpha1\", ResourceVersion:\"684729\", FieldPath:\"\"}): type: 'Warning' reason: 'ErrUpdateFailed' secrets \"test-txt\" already exists"
+
+# SealedSecret
+* kind로 생성시 secrets를 자동으로 생성 해줌.
+* 삭제할때 secrets 삭제 안해 줌.
+* write 단방향 로직임.
+* gitops 친화적, k8s 안에서 secrets resource를 암호화하진 않음.
+* secrets으로 생성되는 건 영향을 미치지 않음.
+* 만약 sealed secrets controller가 삭제되어도 deploy나 pod에는 영향이 없음. 배포만 문제.
+* cert secrets은 항상 백업해둬야 함. ex) kubectl get secrets -n sealed-secrets sealed-secrets-keydpln6 -o yaml 
